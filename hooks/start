@@ -1,0 +1,4 @@
+
+#!/bin/bash
+status-set active
+application-version-set $(grep DISTRIB_RELEASE /etc/lsb-release | cat -d= -sf2)
