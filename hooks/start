@@ -1,4 +1,4 @@
 
 #!/bin/bash
-status-set active
+status-set active ready
 application-version-set $(grep DISTRIB_RELEASE /etc/lsb-release | cat -d= -sf2)
