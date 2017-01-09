@@ -4,6 +4,8 @@ maintainer: John Arbash Meinel <john@arbash-meinel.com>
 description: |
   Run an Ubuntu system, but don't do a whole lot else.
 series: ["xenial", "trusty"]
+provides:
+    ubuntu: ubuntu
 tags:
   # https://jujucharms.com/docs/stable/authors-charm-metadata
   - misc
