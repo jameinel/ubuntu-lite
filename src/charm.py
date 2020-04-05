@@ -1,9 +1,9 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 import os
 import subprocess
 
-from ops import charm, model
+from ops import charm, main, model
 
 
 def set_application_version(version):
@@ -39,3 +39,7 @@ class Ubuntu(charm.CharmBase):
         load1min, load5min, load15min = os.getloadavg()
         self.model.unit.status = model.ActiveStatus(
             'load: {:.2f} {:.2f} {:.2f}'.format(load1min, load5min, load15min))
+
+
+if __name__ == '__main__':
+    main.main(Ubuntu)
