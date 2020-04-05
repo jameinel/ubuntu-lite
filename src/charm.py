@@ -8,10 +8,10 @@ from ops import charm, main, model
 
 def set_application_version(version):
     # TODO: application-version-set should be modeled in the framework
-    subprocess.check_call(['application-version-set', self._get_ubuntu_series()])
+    subprocess.check_call(['application-version-set', version])
 
 
-def _get_ubuntu_series(self):
+def _get_ubuntu_series():
     with open('/etc/lsb-release', 'rt') as lsb:
         for line in lsb:
             line = line.strip()
