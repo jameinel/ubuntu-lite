@@ -12,6 +12,7 @@ def set_application_version(version):
 
 
 def _get_ubuntu_series():
+    """Read /etc/lsb-release to get the Ubuntu release number."""
     with open('/etc/lsb-release', 'rt') as lsb:
         for line in lsb:
             line = line.strip()
