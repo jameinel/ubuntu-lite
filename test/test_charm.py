@@ -1,3 +1,7 @@
+# Copyright 2020 Canonical Ltd.
+# Licensed under the AGPLv3, see LICENCE file for details.
+
+import os
 import sys
 import unittest
 from unittest.mock import patch
@@ -26,12 +30,21 @@ class CharmTestCase(unittest.TestCase):
     def test_on_update_status(self):
         harness = testing.Harness(charm.Ubuntu)
         harness.begin()
-        # TODO: better helper for this
+        # TODO: Harness should have a better helper for this
         with patch('os.getloadavg', create=True, return_value=(1.0, 2.2, 3.5)) as app_version_mock:
             harness.charm.on.update_status.emit()
         status = harness.model.unit.status
         self.assertIsInstance(status, model.ActiveStatus)
         self.assertEqual(status.message, 'load: 1.00 2.20 3.50')
+
+    def test_on_load_action(self):
+        self.skipTest("action-get not yet supported by ops.testing.Harness")
+        harness = testing.Harness(charm.Ubuntu)
+        harness.begin()
+        with patch('os.getloadavg', create=True, return_value=(1.1, 2.2, 3.5)) as app_version_mock:
+            # TODO: Harness should have support for triggering actions
+            with patch.dict(os.environ, {'JUJU_ACTION_NAME': 'load'}):
+                harness.charm.on.load_action.emit()
 
 
 if __name__ == '__main__':
