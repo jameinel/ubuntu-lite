@@ -29,27 +29,9 @@ def _get_ubuntu_series():
     return '<unknown>'
 
 
-class LoadActionEvent(charm.ActionEvent):
-    """Represents the 'load' action.
-
-    Used when a user wants to get the current load of the instance.
-    """
-    pass
-
-
-class UbuntuEvents(charm.CharmEvents):
-    """Additional events that exist for the Ubuntu charm.
-
-    The only interesting event that is added is the load action.
-    """
-    load_action = framework.EventSource(LoadActionEvent)
-
-
 class Ubuntu(charm.CharmBase):
     """The simplest of charms that just gets Ubuntu up and running.
     """
-
-    on = UbuntuEvents()
 
     def __init__(self, framework, key):
         super().__init__(framework, key)
