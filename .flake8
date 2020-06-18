@@ -1,0 +1,4 @@
+[flake8]
+ignore = E402
+max-line-length = 99
+exclude = ./mod/operator,__pycache__

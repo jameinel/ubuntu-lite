@@ -32,7 +32,7 @@ class CharmTestCase(unittest.TestCase):
         harness = testing.Harness(charm.Ubuntu)
         harness.begin()
         # TODO: Harness should have a better helper for this
-        with patch('os.getloadavg', create=True, return_value=(1.0, 2.2, 3.5)) as app_version_mock:
+        with patch('os.getloadavg', create=True, return_value=(1.0, 2.2, 3.5)):
             harness.charm.on.update_status.emit()
         status = harness.model.unit.status
         self.assertIsInstance(status, model.ActiveStatus)
@@ -42,7 +42,7 @@ class CharmTestCase(unittest.TestCase):
         self.skipTest("action-get not yet supported by ops.testing.Harness")
         harness = testing.Harness(charm.Ubuntu)
         harness.begin()
-        with patch('os.getloadavg', create=True, return_value=(1.1, 2.2, 3.5)) as app_version_mock:
+        with patch('os.getloadavg', create=True, return_value=(1.1, 2.2, 3.5)):
             # TODO: Harness should have support for triggering actions
             with patch.dict(os.environ, {'JUJU_ACTION_NAME': 'load'}):
                 harness.charm.on.load_action.emit()

@@ -7,7 +7,6 @@ import subprocess
 
 from ops import (
     charm,
-    framework,
     main,
     model,
 )
