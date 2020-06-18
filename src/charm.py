@@ -33,8 +33,8 @@ class Ubuntu(charm.CharmBase):
     """The simplest of charms that just gets Ubuntu up and running.
     """
 
-    def __init__(self, framework, key):
-        super().__init__(framework, key)
+    def __init__(self, framework, *args):
+        super().__init__(framework, *args)
 
         self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.update_status, self._on_update_status)

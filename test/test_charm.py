@@ -2,11 +2,12 @@
 # Licensed under the AGPLv3, see LICENCE file for details.
 
 import os
+import pathlib
 import sys
 import unittest
 from unittest.mock import patch
 
-sys.path.insert(0, '../src')
+sys.path.insert(0, str(pathlib.Path(__file__).parents[1] / 'src'))
 
 import charm
 from ops import model, testing
