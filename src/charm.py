@@ -58,4 +58,4 @@ class Ubuntu(charm.CharmBase):
 
 
 if __name__ == '__main__':
-    main.main(Ubuntu)
+    main.main(Ubuntu, use_juju_for_storage=True)
