@@ -13,6 +13,9 @@ import charm
 from ops import model, testing
 
 
+testing.SIMULATE_CAN_CONNECT = True
+
+
 class CharmTestCase(unittest.TestCase):
 
     def test_on_start(self):
