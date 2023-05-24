@@ -1,4 +1,4 @@
 [flake8]
 ignore = E402
 max-line-length = 99
-exclude = ./mod/operator,__pycache__
+exclude = ./mod/operator,__pycache__,./venv
