@@ -6,6 +6,9 @@ bases:
       architectures: ["amd64"]
     run-on:
     - name: ubuntu
+      channel: "16.04"
+      architectures: ["amd64"]
+    - name: ubuntu
       channel: "18.04"
       architectures: ["amd64"]
     - name: ubuntu
