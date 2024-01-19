@@ -1,0 +1,3 @@
+load:
+    additionalProperties: false
+    description: Report the current load on the machine
