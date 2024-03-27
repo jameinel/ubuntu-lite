@@ -1,2 +1,2 @@
-ops < 2.0
+ops @ git+https://github.com/jameinel/operator@2.12-user-secrets
 

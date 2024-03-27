@@ -6,3 +6,8 @@ check: lint
 
 lint:
 	flake8
+
+version:
+	git describe --dirty --tags > ./version
+
+.PHONY: version

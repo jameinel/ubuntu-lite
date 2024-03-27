@@ -3,6 +3,7 @@
 # Licensed under the AGPLv3, see LICENCE file for details.
 
 import os
+import logging
 import subprocess
 
 from ops import (
@@ -10,6 +11,9 @@ from ops import (
     main,
     model,
 )
+
+
+logger = logging.getLogger("ubuntu-lite")
 
 
 def set_application_version(version):
@@ -39,6 +43,9 @@ class Ubuntu(charm.CharmBase):
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.framework.observe(self.on.load_action, self._on_load_action)
 
+        self.framework.observe(self.on.config_changed, self._on_config_changed)
+        self.framework.observe(self.on.secret_changed, self._on_secret_changed)
+
     def _on_start(self, event):
         self.model.unit.status = model.ActiveStatus()
         set_application_version(_get_ubuntu_series())
@@ -55,6 +62,23 @@ class Ubuntu(charm.CharmBase):
             "5min": load5min,
             "15min": load15min,
         })
+
+    def _on_config_changed(self, event):
+        logger.info("config: %r", dict(self.config))
+        mysec = self.config.get('mysec')
+        if mysec:
+            sec = self.model.get_secret(id=mysec, label="mysec")
+            content = sec.get_content()
+            peek = sec.peek_content()
+            logger.info("secret, I shouldn't be telling you this: %r", content)
+            logger.info("secret, peeking ahead: %r", peek)
+
+    def _on_secret_changed(self, event):
+        logger.info("secret event: %r", event)
+        content = event.secret.get_content()
+        peek = event.secret.peek_content()
+        logger.info("secret, I shouldn't be telling you this: %r", content)
+        logger.info("secret, peeking ahead: %r", peek)
 
 
 if __name__ == '__main__':
