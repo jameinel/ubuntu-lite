@@ -11,6 +11,10 @@ from ops import (
     model,
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def set_application_version(version):
     # TODO: application-version-set should be modeled in the framework
@@ -38,6 +42,10 @@ class Ubuntu(charm.CharmBase):
         self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.framework.observe(self.on.load_action, self._on_load_action)
+        self.framework.observe(self.on['pptest'].relation_created, self._on_peer_created)
+        self.framework.observe(self.on['pptest'].relation_joined, self._on_peer_joined)
+        self.framework.observe(self.on['pptest'].relation_changed, self._on_peer_changed)
+        logger.info("got woken up for %s", os.environ.get('JUJU_DISPATCH_PATH'))
 
     def _on_start(self, event):
         self.model.unit.status = model.ActiveStatus()
@@ -55,6 +63,15 @@ class Ubuntu(charm.CharmBase):
             "5min": load5min,
             "15min": load15min,
         })
+
+    def _on_peer_created(self, event):
+        logger.info("peer created %r", event)
+
+    def _on_peer_joined(self, event):
+        logger.info("peer joined %r", event)
+
+    def _on_peer_changed(self, event):
+        logger.info("peer changed %r", event)
 
 
 if __name__ == '__main__':
