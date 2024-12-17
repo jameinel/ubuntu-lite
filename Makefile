@@ -2,7 +2,7 @@
 test: check
 
 check: lint
-	python3 -m unittest
+	pytest
 
 lint:
-	flake8
+	ruff check

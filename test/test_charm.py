@@ -1,54 +1,46 @@
 # Copyright 2020 Canonical Ltd.
 # Licensed under the AGPLv3, see LICENCE file for details.
 
-import os
 import pathlib
 import sys
 import unittest
 from unittest.mock import patch
 
+# TODO (jam): 2024-12-17 Find a way to remove this
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1] / 'src'))
 
 import charm
-from ops import model, testing
+from ops import testing
 
 
-testing.SIMULATE_CAN_CONNECT = True
+def test_start_calls_load():
+    """Test that the charm responds to a start event by checking the load on the system."""
+    ctx = testing.Context(charm.Ubuntu)
+    state = testing.State(leader=True)
+    with patch('charm._get_ubuntu_series', spec=True, return_value='18.04') as lsb_mock:
+        out = ctx.run(ctx.on.start(), state)
+        assert out.workload_version == '18.04'
+        assert lsb_mock.call_count == 1
+        # the workload_version_history only holds the previous values, but this
+        # ensures that we aren't calling the update multiple times
+        assert ctx.workload_version_history == []
 
+def test_update_status():
+    """Test that the status message reflects the result from load."""
+    ctx = testing.Context(charm.Ubuntu)
+    state = testing.State(leader=True)
+    with patch('os.getloadavg', create=True, return_value=(1.0, 2.2, 3.5)):
+        out = ctx.run(ctx.on.update_status(), state)
+        assert out.unit_status == testing.ActiveStatus('load: 1.00 2.20 3.50')
 
-class CharmTestCase(unittest.TestCase):
-
-    def test_on_start(self):
-        harness = testing.Harness(charm.Ubuntu)
-        harness.begin()
-        with patch('charm._get_ubuntu_series', spec=True, return_value='18.04') as lsb_mock:
-            with patch('charm.set_application_version', spec=True) as app_version_mock:
-                # TODO: This should be harness.emit_start() or something along those lines
-                harness.charm.on.start.emit()
-                self.assertIsInstance(harness.model.unit.status, model.ActiveStatus)
-                # TODO: a way to test the application-version is correct
-        self.assertEqual(lsb_mock.call_count, 1)
-        self.assertEqual(app_version_mock.call_count, 1)
-        self.assertEqual(app_version_mock.call_args, (('18.04',), {}))
-
-    def test_on_update_status(self):
-        harness = testing.Harness(charm.Ubuntu)
-        harness.begin()
-        # TODO: Harness should have a better helper for this
-        with patch('os.getloadavg', create=True, return_value=(1.0, 2.2, 3.5)):
-            harness.charm.on.update_status.emit()
-        status = harness.model.unit.status
-        self.assertIsInstance(status, model.ActiveStatus)
-        self.assertEqual(status.message, 'load: 1.00 2.20 3.50')
-
-    def test_on_load_action(self):
-        self.skipTest("action-get not yet supported by ops.testing.Harness")
-        harness = testing.Harness(charm.Ubuntu)
-        harness.begin()
-        with patch('os.getloadavg', create=True, return_value=(1.1, 2.2, 3.5)):
-            # TODO: Harness should have support for triggering actions
-            with patch.dict(os.environ, {'JUJU_ACTION_NAME': 'load'}):
-                harness.charm.on.load_action.emit()
+def test_on_load_action():
+    """Test that you can call the `load` action and it returns appropriate content."""
+    ctx = testing.Context(charm.Ubuntu)
+    state = testing.State(leader=True)
+    with patch('os.getloadavg', create=True, return_value=(1.1, 2.2, 3.5)):
+        out = ctx.run(ctx.on.action("load"), state)
+        _ = out
+        assert ctx.action_results == {'15min': 3.5, '1min': 1.1, '5min': 2.2}
 
 
 if __name__ == '__main__':

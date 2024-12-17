@@ -2,19 +2,15 @@
 # Copyright 2020 Canonical Ltd.
 # Licensed under the AGPLv3, see LICENCE file for details.
 
+"""A simple charm that has minimal dependencies."""
+
 import os
-import subprocess
 
 from ops import (
     charm,
     main,
     model,
 )
-
-
-def set_application_version(version):
-    # TODO: application-version-set should be modeled in the framework
-    subprocess.check_call(['application-version-set', version])
 
 
 def _get_ubuntu_series():
@@ -29,8 +25,7 @@ def _get_ubuntu_series():
 
 
 class Ubuntu(charm.CharmBase):
-    """The simplest of charms that just gets Ubuntu up and running.
-    """
+    """The simplest of charms that just gets Ubuntu up and running."""
 
     def __init__(self, framework, *args):
         super().__init__(framework, *args)
@@ -41,7 +36,7 @@ class Ubuntu(charm.CharmBase):
 
     def _on_start(self, event):
         self.model.unit.status = model.ActiveStatus()
-        set_application_version(_get_ubuntu_series())
+        self.model.unit.set_workload_version(_get_ubuntu_series())
 
     def _on_update_status(self, event):
         load1min, load5min, load15min = os.getloadavg()

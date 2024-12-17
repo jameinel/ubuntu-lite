@@ -1,0 +1,40 @@
+# Copyright 2024 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+# Testing tools configuration
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+
+# Formatting tools configuration
+[tool.black]
+line-length = 99
+target-version = ["py38"]
+
+# Linting tools configuration
+[tool.ruff]
+line-length = 99
+extend-exclude = ["__pycache__", "*.egg_info"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "C", "N", "R", "D"]
+# Ignore E501 because using black creates errors with this
+# Ignore D107 Missing docstring in __init__
+ignore = ["W505", "E501", "D107", "C901", "N818", "RET504"]
+# D100, D101, D102, D103: Ignore missing docstrings in tests
+per-file-ignores = {"test/*" = ["D100","D101","D102","D103"]}
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pyright]
+extraPaths = ["lib"]
+pythonVersion = "3.8"
+pythonPlatform = "All"
+
+[tool.codespell]
+skip = ".git,.tox,build,venv*"
+ignore-words-list = "assertIn"
+
