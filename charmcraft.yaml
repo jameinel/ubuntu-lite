@@ -20,3 +20,6 @@ bases:
     - name: ubuntu
       channel: "24.04"
       architectures: ["amd64","arm64"]
+    - name: ubuntu
+      channel: "26.04"
+      architectures: ["amd64","arm64"]
